@@ -46,8 +46,9 @@ public var workSpace: URL {
 public func attach(url: URL,
                    size: Int = 0,
                    tsURL: TsURLHandler? = nil,
+                   bandwidth: BandWidthHandler? = nil,
                    completion: AttachCompletion? = nil) throws -> Workflow {
-        return try Manager.default.attach(url: url, size: size, tsURL: tsURL, completion: completion)
+        return try Manager.default.attach(url: url, size: size, tsURL: tsURL, bandwidth: bandwidth, completion: completion)
 }
 
 /// Cancels the task which url is equal to the specified url using the default `Manager`.

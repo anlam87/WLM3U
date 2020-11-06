@@ -36,4 +36,6 @@ open class Model: Codable {
     public var totalSize: Int?
     /// The m3u file's source path.
     public var uri: URL?
+    /// if content url is till m3u8, use bandwidth to decide with link will be used
+    public var bandwidthArr: [Int]?
 }

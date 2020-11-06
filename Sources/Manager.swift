@@ -97,6 +97,8 @@ public let TaskErrorNotification: Notification.Name =
 /// URL?: URL of the slice file. Retuen `nil` if it is not a ts file.
 public typealias TsURLHandler = (String, URL) -> URL?
 
+public typealias BandWidthHandler = (String, URL) -> Int?
+
 /// A closure executed once a attach task has completed.
 /// Result<Model>: A Result instance of the attach task. The `Model` value is an object parsed from m3u file.
 public typealias AttachCompletion = (Result<Model>) -> ()
@@ -145,6 +147,7 @@ open class Manager {
     public func attach(url: URL,
                        size: Int = 0,
                        tsURL: TsURLHandler? = nil,
+                       bandwidth: BandWidthHandler? = nil,
                        completion: AttachCompletion? = nil) throws -> Workflow {
             
             if url.isFileURL || !workSpace.isFileURL {
@@ -164,7 +167,7 @@ open class Manager {
             let workflow = Workflow(url: url, workSpace: workSpace, size: size)
             workflow.delegate = self
             workflows.append(workflow)
-            workflow.attach(tsURL: tsURL, completion: completion)
+            workflow.attach(tsURL: tsURL, bandwidth: bandwidth, completion: completion)
             return workflow
     }
     

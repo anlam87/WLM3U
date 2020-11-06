@@ -58,6 +58,9 @@ open class Workflow {
     // Attach
     private var tsURLHandler: TsURLHandler?
     
+    //Bandwidth
+    private var bandwidthHandler: BandWidthHandler?
+    
     // Download
     
     private var downloadTimer: Timer?
@@ -88,6 +91,7 @@ open class Workflow {
         downloadProgress = nil
         downloadCompletion = nil
         combineCompletion = nil
+        bandwidthHandler = nil
     }
 }
 
@@ -104,8 +108,9 @@ extension Workflow {
     /// - Returns: A `Workflow` instance.
     @discardableResult
     
-    func attach(tsURL: TsURLHandler? = nil, completion: AttachCompletion?) -> Self {
+    func attach(tsURL: TsURLHandler? = nil, bandwidth: BandWidthHandler? = nil, completion: AttachCompletion?) -> Self {
         tsURLHandler = tsURL
+        bandwidthHandler = bandwidth
         operationQueue.isSuspended = true
         
         // e.g. http://qq.com/123/hls/FromSoftware.m3u
@@ -211,6 +216,9 @@ extension Workflow {
             model.tsArr = arr
                 .filter { $0.hasSuffix(".ts") }
                 .map { uri.appendingPathComponent($0) }
+        }
+        if let bwHandler = bandwidthHandler {
+            model.bandwidthArr = arr.compactMap { bwHandler($0, uri) }
         }
         if model.tsArr?.isEmpty ?? true { throw WLError.m3uFileContentInvalid }
         if model.totalSize == 0 {
